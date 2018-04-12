@@ -6,12 +6,24 @@
   <script type="text/javascript" src="client/lib/angular-1.6.9.min.js"></script>
   <script type="text/javascript" src="client/lib/socket.io.js"></script>
   <script type="text/javascript" src="client/js/index.js"></script>
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+  <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+  <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
 </head>
 <body ng-controller="myCtrl">
-<ul id="messages"></ul>
-<div>
-  <input id="m" ng-model="message" autocomplete="off" />
-  <button ng-click="send()">Send</button>
-</div>
+  <div class="col-sm-3 col-sm-offset-4 frame">
+    <ul></ul>
+    <div class="input-field">
+      <div class="msj-rta macro">                        
+        <div class="text text-r" style="background:whitesmoke !important">
+            <input ng-model="message" class="mytext" placeholder="Type a message"/>
+        </div> 
+      </div>
+      <div style="padding:10px;" ng-click="send()">
+          <span class="glyphicon glyphicon-share-alt"></span>
+      </div>                
+    </div>
+  </div>       
 </body>
 </html>
