@@ -20,7 +20,7 @@ app.controller('myCtrl', function($scope){
     var li = '<li style="width: 100%">' +
       '<div class="macro flex-container">' +
           '<img class="flex-img img-circle" src="client/img/bot.png"></img>' +
-          '<p class="flex-text">' + message + '</p>' +
+          '<p class="flex-text message">' + message + '</p>' +
       '</div>' +
     '</li>';
 
