@@ -21,6 +21,16 @@
     width: 100%;
 }
 
+.button-text {
+    background: rgba(128, 128, 120, 0.12);
+    padding: 17px;
+    margin-top: -6%;
+    border-top-left-radius: 6px;
+    margin-left: -6%;
+    margin-right: -6.1%;
+    border-top-right-radius: 6px;
+}
+
 .message {
     opacity: 0.8;
     font-family: sans-serif;

@@ -34,8 +34,22 @@ function generateVideoTemplate() {
   return html;
 }
 
+function generateButtonTemplate() {
+  var html =  
+  '<div class="card" style="width: 100%; border-radius: 8px">' +
+    '<div class="card-body">' +
+      '<p class="button-text">What can I do for you?</p>' +
+      '<div class="text-center" style="cursor: pointer"><a href="#">Card title</a></div>' +
+      '<hr>' +
+      '<div class="text-center" style="cursor: pointer"><a href="#">Some quick example text</a></div>' +
+    '</div>' +
+  '</div>';
+
+  return html;
+}
+
 app.controller('myCtrl', function($scope){
-	var scoket = io.connect('http://localhost:8080');
+	var scoket = io.connect();
 
   $('input').keypress(function(e) {
     if (e.which == 13) {
@@ -55,7 +69,8 @@ app.controller('myCtrl', function($scope){
       '<div class="macro flex-container">' +
       '<img class="flex-img img-circle" src="client/img/bot.png"></img>';
           
-      li += generateImageTemplate(message, message, 'client/img/shirt.jpg', '#', '#');
+      li += generateButtonTemplate(); 
+      //generateImageTemplate(message, message, 'client/img/shirt.jpg', '#', '#');
 
       li += '</div>' + '</li>';
 
