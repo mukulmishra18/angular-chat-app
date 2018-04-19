@@ -4,6 +4,22 @@ function generateTextTemplate(message) {
   return '<p class="flex-text message">' + message + '</p>';
 }
 
+function handleQuickReply(evt) {
+  console.log(evt);
+  $('#quick-reply').remove();
+}
+
+function generateQuickReplyTemplate() {
+  var html =
+    '<div id="quick-reply" class="container" style="position: absolute; bottom: 13%">' +
+      '<button class="btn btn-danger quick-button" onclick="handleQuickReply(0)">red</button>' +
+      '<button class="btn btn-success quick-button" onclick="handleQuickReply(1)">green</button>' +
+      '<button class="btn btn-primary quick-button" onclick="handleQuickReply(2)">blue</button>' +
+    '</div>';
+
+  return html;
+}
+
 function generateImageTemplate(title, subtitle, imageUrl, link1, link2) {
   var html =
     '<div class="card" style="width: 100%; border-radius: 8px">' +
@@ -66,14 +82,16 @@ app.controller('myCtrl', function($scope){
 
   scoket.on('message', function(message) {
     var li = '<li style="width: 100%">' +
-      '<div class="macro flex-container">' +
+      '<div style="margin-left: -5%" class="macro flex-container">' +
       '<img class="flex-img img-circle" src="client/img/bot.png"></img>';
           
-      li += generateButtonTemplate(); 
+      li += generateImageTemplate(message, message, '/client/img/shirt.jpg', '#', '#');
       //generateImageTemplate(message, message, 'client/img/shirt.jpg', '#', '#');
 
       li += '</div>' + '</li>';
 
     $('ul').append(li);
+    $('ul').after(generateQuickReplyTemplate());
+    $('ul').animate({scrollTop: $('ul').prop("scrollHeight")}, 500);
   });
 });
