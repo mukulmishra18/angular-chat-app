@@ -23,7 +23,7 @@ function generateQuickReplyTemplate() {
 function generateImageTemplate(title, subtitle, imageUrl, link1, link2) {
   var html =
     '<div class="card" style="width: 100%; border-radius: 8px">' +
-      '<img class="card-img-top" style="border-radius: 8px" src="'+ imageUrl + '" alt="Card image cap">' +
+      '<img class="card-img-top" style="border-top-left-radius: 8px; border-top-right-radius: 8px" src="'+ imageUrl + '" alt="Card image cap">' +
       '<div class="card-body">' +
         '<h5 class="card-title" style="font-weight: bold;">' + title + '</h5>' +
         '<h6 class="card-subtitle mb-2 text-muted" style="font-size: 80%;">' + subtitle + '</h6>' +
@@ -64,6 +64,24 @@ function generateButtonTemplate() {
   return html;
 }
 
+function generateReceiptTemplate() {
+  var html =
+    '<div class="card" style="width: 100%; border-radius: 8px">' +
+      '<img class="card-img-top" style="border-top-left-radius: 8px; border-top-right-radius: 8px" src="client/img/shoes.jpg" alt="Card image cap">' +
+      '<div class="card-body">' +
+        '<h5 class="card-title" style="font-weight: bold;">Paid With</h5>' +
+        '<h6 class="card-subtitle mb-2 text-muted" style="font-size: 80%;">Visa 2345</h6>' +
+        '<h5 class="card-title" style="font-weight: bold;">Ship To</h5>' +
+        '<h6 class="card-subtitle mb-2 text-muted" style="font-size: 80%;">123 Hacker street</h6>' +
+        '<h6 class="card-subtitle mb-2 text-muted" style="font-size: 80%;">Imaginary World</h6>' +
+        '<hr/>' +
+        '<p style="float: left">Total</p><p style="float: right; font-weight: bold">$510</p>' +
+      '</div>' +
+    '</div>';
+
+  return html;
+}
+
 app.controller('myCtrl', function($scope){
 	var scoket = io.connect();
 
@@ -85,13 +103,16 @@ app.controller('myCtrl', function($scope){
       '<div style="margin-left: -5%" class="macro flex-container">' +
       '<img class="flex-img img-circle" src="client/img/bot.png"></img>';
           
-      li += generateImageTemplate(message, message, '/client/img/shirt.jpg', '#', '#');
-      //generateImageTemplate(message, message, 'client/img/shirt.jpg', '#', '#');
+      li += generateReceiptTemplate();
+      //generateImageTemplate(message, message, '/client/img/shoes.jpg', '#', '#');
 
       li += '</div>' + '</li>';
 
     $('ul').append(li);
-    $('ul').after(generateQuickReplyTemplate());
+    
+    // Quick reply buttons.
+    //$('ul').after(generateQuickReplyTemplate());
+    
     $('ul').animate({scrollTop: $('ul').prop("scrollHeight")}, 500);
   });
 });
