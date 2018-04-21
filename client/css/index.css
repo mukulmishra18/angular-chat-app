@@ -7,9 +7,11 @@
 
 .flex-img {
     display: inline;
-    margin: 10px;
+    margin-left: 5px;
+    margin-right: 5px;
     height: 50px;
     width: 50px;
+    border-radius: 50%;
 }
 
 .flex-text {
@@ -17,7 +19,6 @@
     background: whitesmoke;
     padding: 10px;
     border-radius: 4px; 
-    margin: 5px;
     width: 100%;
 }
 
@@ -31,15 +32,28 @@
     border-top-right-radius: 6px;
 }
 
+.grid-container {
+  display: grid;
+  grid-column-gap: 50px;
+  grid-template-columns: auto auto;
+  padding: 10px;
+}
+.grid-item {
+  padding: 20px;
+  font-size: 30px;
+  text-align: center;
+}
+
 .message {
-    opacity: 0.8;
+    margin: 0;
+    opacity: 0.8;   `
     font-family: sans-serif;
 }
 
 .quick-button {
     margin-left: 2px;
     margin-right: 2px;
-    width: 25%;
+    border-radius: 45% !important;
 }
 
 .mytext{
@@ -90,7 +104,6 @@
 }
 
 .macro{
-    margin-top: -5px;
     width:85%;
     border-radius:5px;
     padding:5px;

@@ -1,21 +1,62 @@
 var app = angular.module('myApp',[]);
+var socket = io.connect();
+
+function handleProceed() {
+  socket.emit('message', {
+    me: 'man',
+    attachment: {
+      type:  'text',
+      message: 'Proceed'
+    }
+  });
+}
+
+function handleCancel() {
+  socket.emit('message', {
+    me: 'man',
+    attachment: {
+      type:  'text',
+      message: 'Cancel'
+    }
+  });
+}
+
+function handleShopping() {
+  socket.emit('message', {
+    me: 'man',
+    attachment: {
+      type:  'text',
+      message: 'Shopp!!'
+    }
+  });
+}
+
+function handleQuickReply(args) {
+  console.log(response);
+  var [response, message] = args.split(',')
+  $('#quick-reply').remove();
+  socket.emit('message', {
+    me: 'man',
+    attachment: {
+      type:  'quick_reply',
+      message: message,
+      response: response
+    }
+  });
+}
 
 function generateTextTemplate(message) {
   return '<p class="flex-text message">' + message + '</p>';
 }
 
-function handleQuickReply(evt) {
-  console.log(evt);
-  $('#quick-reply').remove();
-}
+function generateQuickReplyTemplate(message, replies) {
+  var html = '<div id="quick-reply" class="container text-center">';
 
-function generateQuickReplyTemplate() {
-  var html =
-    '<div id="quick-reply" class="container" style="position: absolute; bottom: 13%">' +
-      '<button class="btn btn-danger quick-button" onclick="handleQuickReply(0)">red</button>' +
-      '<button class="btn btn-success quick-button" onclick="handleQuickReply(1)">green</button>' +
-      '<button class="btn btn-primary quick-button" onclick="handleQuickReply(2)">blue</button>' +
-    '</div>';
+  for (var i = 0; i < replies.length; i++) {
+    html += '<button class="btn btn-primary quick-button" onclick="handleQuickReply(\'' + replies[i] + ',' + message + '\')">' + replies[i] + '</button>';
+  }
+
+  html += '</div>';
 
   return html;
 }
@@ -28,7 +69,7 @@ function generateImageTemplate(title, subtitle, imageUrl, link1, link2) {
         '<h5 class="card-title" style="font-weight: bold;">' + title + '</h5>' +
         '<h6 class="card-subtitle mb-2 text-muted" style="font-size: 80%;">' + subtitle + '</h6>' +
         '<hr/>' +
-        '<div class="text-center" style="cursor: pointer"><a href="' + link1 + '">Start Shopping</a></div>' +
+        '<div class="text-center" style="cursor: pointer" onclick="handleShopping()"><a href="' + link1 + '">Start Shopping</a></div>' +
         '<hr>' +
         '<div class="text-center" style="cursor: pointer"><a href="' + link2 + '">Call Us</a></div>' +
       '</div>' +
@@ -50,40 +91,52 @@ function generateVideoTemplate() {
   return html;
 }
 
-function generateButtonTemplate() {
+function generateButtonTemplate(message, text1, link1, text2, link2) {
   var html =  
   '<div class="card" style="width: 100%; border-radius: 8px">' +
     '<div class="card-body">' +
-      '<p class="button-text">What can I do for you?</p>' +
-      '<div class="text-center" style="cursor: pointer"><a href="#">Card title</a></div>' +
+      '<p class="button-text" style="opacity: 0.8; font-family: sans-serif">' + message + '</p>' +
+      '<div class="text-center" style="cursor: pointer" onclick="handleProceed()"><a href="' + link1 + '">' + text1 + '</a></div>' +
       '<hr>' +
-      '<div class="text-center" style="cursor: pointer"><a href="#">Some quick example text</a></div>' +
+      '<div class="text-center" style="cursor: pointer" onclick="handleCancel()"><a href="' + link2 + '">' + text2 + '</a></div>' +
     '</div>' +
   '</div>';
 
   return html;
 }
 
-function generateReceiptTemplate() {
+function generateReceiptTemplate(imageUrl, number, size, cardInfo, address, total) {
   var html =
     '<div class="card" style="width: 100%; border-radius: 8px">' +
-      '<img class="card-img-top" style="border-top-left-radius: 8px; border-top-right-radius: 8px" src="client/img/shoes.jpg" alt="Card image cap">' +
+      '<img class="card-img-top" style="border-top-left-radius: 8px; border-top-right-radius: 8px" src="' + imageUrl + '" alt="Card image cap">' +
       '<div class="card-body">' +
-        '<h5 class="card-title" style="font-weight: bold;">Paid With</h5>' +
-        '<h6 class="card-subtitle mb-2 text-muted" style="font-size: 80%;">Visa 2345</h6>' +
-        '<h5 class="card-title" style="font-weight: bold;">Ship To</h5>' +
-        '<h6 class="card-subtitle mb-2 text-muted" style="font-size: 80%;">123 Hacker street</h6>' +
-        '<h6 class="card-subtitle mb-2 text-muted" style="font-size: 80%;">Imaginary World</h6>' +
+        '<div class="grid-container">' +
+          '<div class="grid-items">' +
+            '<h5 class="card-title" style="font-weight: bold;">Paid With</h5>' +
+            '<h6 class="card-subtitle mb-2 text-muted" style="font-size: 80%;">' + cardInfo + '</h6>' +
+          '</div>' +
+          '<div class="grid-items">' +
+            '<h5 class="card-title" style="font-weight: bold;">Number of items</h5>' +
+            '<h6 class="card-subtitle mb-2 text-muted" style="font-size: 80%;">' + number + '</h6>' +
+          '</div>' +
+          '<div class="grid-items">' +
+            '<h5 class="card-title" style="font-weight: bold;">Ship To</h5>' +
+            '<h6 class="card-subtitle mb-2 text-muted" style="font-size: 80%;">' + address + '</h6>' +
+          '</div>' +
+          '<div class="grid-items">' +
+            '<h5 class="card-title" style="font-weight: bold;">Size</h5>' +
+            '<h6 class="card-subtitle mb-2 text-muted" style="font-size: 80%;">' + size + '</h6>' +
+          '</div>' +
+        '</div>' +
         '<hr/>' +
-        '<p style="float: left">Total</p><p style="float: right; font-weight: bold">$510</p>' +
-      '</div>' +
+        '<p style="float: left">Total</p><p style="float: right; font-weight: bold">' + total + '</p>' +
+      '</div>'
     '</div>';
 
   return html;
 }
 
 app.controller('myCtrl', function($scope){
-	var scoket = io.connect();
 
   $('input').keypress(function(e) {
     if (e.which == 13) {
@@ -95,23 +148,63 @@ app.controller('myCtrl', function($scope){
  	  var msg = $scope.message;
 
     $scope.message = "";
-    scoket.emit('message', msg);
+    socket.emit('message', {
+      me: 'man',
+      attachment: {
+        type: 'text',
+        message: msg
+      }
+    });
  }
 
-  scoket.on('message', function(message) {
-    var li = '<li style="width: 100%">' +
-      '<div style="margin-left: -5%" class="macro flex-container">' +
-      '<img class="flex-img img-circle" src="client/img/bot.png"></img>';
-          
-      li += generateReceiptTemplate();
-      //generateImageTemplate(message, message, '/client/img/shoes.jpg', '#', '#');
+  socket.on('message', function(msg) {
+    console.log(msg);
+    var li = '';
+    if (msg.me === 'bot') {
+      li += '<li style="width: 100%"><div style="margin-left: -5%" class="macro flex-container">' +
+      '<img class="flex-img img-circle" src="' + 'client/img/bot.png' + '"></img>';
+    } else {
+      li += '<li style="width: 100%; margin-right: 14%; text-align: end"><div style="margin-left: 18%" class="macro flex-container">';
+    }
 
-      li += '</div>' + '</li>';
+    if (msg.attachment.type === 'text') {
+      li += generateTextTemplate(msg.attachment.message);
+    }
+    if (msg.attachment.type === 'button') {
+      li += generateButtonTemplate(msg.attachment.message, msg.attachment.text1,
+        msg.attachment.link1, msg.attachment.text2, msg.attachment.link2);
+    }
+    if (msg.attachment.type === 'image') {
+      li += generateImageTemplate(msg.attachment.title, msg.attachment.subtitle, msg.attachment.url,
+        msg.attachment.link1, msg.attachment.link2);
+    }
+    if (msg.attachment.type === 'quickReply') {
+      li += generateTextTemplate(msg.attachment.message);
+    }
+    if (msg.attachment.type === 'receipt') {
+      li += generateReceiptTemplate(msg.attachment.imageUrl, msg.attachment.number, msg.attachment.size,
+        msg.attachment.cardInfo, msg.attachment.address, msg.attachment.total);
+    }
+    if (msg.attachment.type === 'quick_reply') {
+      li += generateTextTemplate(msg.attachment.response);
+    }
+
+    //generateImageTemplate(message, message, '/client/img/shoes.jpg', '#', '#');
+
+    if (msg.me === 'man') {
+      li += '<img style="float: right" class="flex-img img-circle" src="' + 'client/img/man.png' + '"></img>'
+    }
+    li += '</div>';
+    if (msg.attachment.type === 'quickReply') {
+      li += generateQuickReplyTemplate(msg.attachment.message, msg.attachment.replies);
+    }
+    li += '</li>';
 
     $('ul').append(li);
-    
-    // Quick reply buttons.
-    //$('ul').after(generateQuickReplyTemplate());
+
+    if (msg.attachment.type === 'quickReply') {
+      //$('ul').after(generateQuickReplyTemplate(msg.attachment.replies));
+    }
     
     $('ul').animate({scrollTop: $('ul').prop("scrollHeight")}, 500);
   });
