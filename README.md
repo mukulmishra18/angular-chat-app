@@ -21,6 +21,6 @@ Next, install the dependencies using:
 
 Run the server using:
 	
-	$ node server
+	$ node server.js
 
 Finally go to `localhost:8080` to see the running app.
