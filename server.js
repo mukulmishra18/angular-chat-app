@@ -12,7 +12,10 @@ app.get('/', function (req, res) {
 
 var state = {
   proceed: false,
-  cancelled: false
+  cancelled: false,
+  finished: false,
+  startedShopping: false,
+  confirmed: false
 };
 
 io.on('connection', function (socket) {
@@ -64,9 +67,12 @@ io.on('connection', function (socket) {
   });
 
   socket.on('message', function (message) {
+    if (state.finished || state.cancelled) {
+      return;
+    }
     console.log('Message:', message);
-    if (message.attachment.type === 'text' && !state.cancelled) {
-      if (message.attachment.message === 'Proceed') {
+    if (message.attachment.type === 'text') {
+      if (message.attachment.message === 'Proceed' && !state.proceed) {
         state.proceed = true;
         promiseTimeout(function() {
           io.emit('message', {
@@ -89,7 +95,7 @@ io.on('connection', function (socket) {
                 link2: '#'
               }
             });
-          }, 1500);  
+          }, 1500);
         });
       }
 
@@ -117,7 +123,8 @@ io.on('connection', function (socket) {
         });
       }
 
-      if (message.attachment.message === 'Shopp!!') {
+      if (message.attachment.message === 'Shopp!!' && !state.startedShopping) {
+        state.startedShopping = true;
         promiseTimeout(function() {
           io.emit('message', {
             me: 'bot',
@@ -139,9 +146,32 @@ io.on('connection', function (socket) {
           }, 1500);
         });
       }
+
+      if (message.attachment.message === 'Confirm' && !state.confirmed) {
+        state.confirmed = true;
+        promiseTimeout(function() {
+          io.emit('message', {
+            me: 'bot',
+            attachment: {
+              type: 'text',
+              message: 'We mailed you the receipt.'
+            }
+          });
+        }, 1500).then(function() {
+          promiseTimeout(function() {
+            io.emit('message', {
+              me: 'bot',
+              attachment: {
+                type: 'text',
+                message: 'Thank you for shopping with us!'
+              }
+            });
+          }, 1500);
+        });
+      }
     }
 
-    if (message.attachment.type === 'quick_reply' && !state.cancelled) {
+    if (message.attachment.type === 'quick_reply') {
       if (message.attachment.message === 'Choose a size.') {
         state.size = message.attachment.response;
         promiseTimeout(function() {
@@ -206,28 +236,20 @@ io.on('connection', function (socket) {
             io.emit('message', {
               me: 'bot',
               attachment: {
-                type: 'text',
-                message: 'We mailed you the receipt.'
+                type: 'button',
+                message: 'Click to \"Confirm\" to confirm the order or \"Cancel\" to cancel.',
+                text1: 'Confirm',
+                link1: '#',
+                text2: 'Cancel',
+                link2: '#'
               }
-            });
-          }, 1500);
-        }).then(function() {
-          promiseTimeout(function() {
-            io.emit('message', {
-              me: 'bot',
-              attachment: {
-                type: 'text',
-                message: 'Thank you for shopping with us!'
-              }
-            });
+            })
           }, 1500);
         });
       }
     }
 
-    if (!state.cancelled) {
-      io.emit('message', message);
-    }
+    io.emit('message', message);
   });
 
   socket.on('disconnect', function () {

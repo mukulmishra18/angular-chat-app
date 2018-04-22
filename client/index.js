@@ -1,12 +1,12 @@
 var app = angular.module('myApp',[]);
 var socket = io.connect();
 
-function handleProceed() {
+function handleProceed(message) {
   socket.emit('message', {
     me: 'man',
     attachment: {
       type:  'text',
-      message: 'Proceed'
+      message: message
     }
   });
 }
@@ -96,7 +96,7 @@ function generateButtonTemplate(message, text1, link1, text2, link2) {
   '<div class="card" style="width: 100%; border-radius: 8px">' +
     '<div class="card-body">' +
       '<p class="button-text" style="opacity: 0.8; font-family: sans-serif">' + message + '</p>' +
-      '<div class="text-center" style="cursor: pointer" onclick="handleProceed()"><a href="' + link1 + '">' + text1 + '</a></div>' +
+      '<div class="text-center" style="cursor: pointer" onclick="handleProceed(\'' + text1 + '\')"><a href="' + link1 + '">' + text1 + '</a></div>' +
       '<hr>' +
       '<div class="text-center" style="cursor: pointer" onclick="handleCancel()"><a href="' + link2 + '">' + text2 + '</a></div>' +
     '</div>' +
