@@ -33,7 +33,7 @@ io.on('connection', function (socket) {
   }
 
   promiseTimeout(function() {
-    io.emit('message', {
+    socket.emit('message', {
       me: 'bot',
       attachment: {
         type: 'text',
@@ -42,7 +42,7 @@ io.on('connection', function (socket) {
     });
   }, 1500).then(function() {
     return promiseTimeout(function() {
-      io.emit('message', {
+      socket.emit('message', {
         me: 'bot',
         attachment: {
           type: 'text',
@@ -52,7 +52,7 @@ io.on('connection', function (socket) {
     }, 1500);
   }).then(function() {
     return promiseTimeout(function() {
-      io.emit('message', {
+      socket.emit('message', {
         me: 'bot',
         attachment: {
           type: 'button',
@@ -75,7 +75,7 @@ io.on('connection', function (socket) {
       if (message.attachment.message === 'Proceed' && !state.proceed) {
         state.proceed = true;
         promiseTimeout(function() {
-          io.emit('message', {
+          socket.emit('message', {
             me: 'bot',
             attachment: {
               type: 'text',
@@ -84,7 +84,7 @@ io.on('connection', function (socket) {
           });
         }, 1500).then(function() {
           return promiseTimeout(function() {
-            io.emit('message', {
+            socket.emit('message', {
               me: 'bot',
               attachment: {
                 type: 'image',
@@ -101,9 +101,9 @@ io.on('connection', function (socket) {
 
       if (message.attachment.message === 'Cancel') {
         state.cancelled = true;
-        io.emit('message', message);
+        socket.emit('message', message);
         promiseTimeout(function() {
-          io.emit('message', {
+          socket.emit('message', {
             me: 'bot',
             attachment: {
               type: 'text',
@@ -112,7 +112,7 @@ io.on('connection', function (socket) {
           });
         }, 1500).then(function() {
           promiseTimeout(function() {
-            io.emit('message', {
+            socket.emit('message', {
               me: 'bot',
               attachment: {
                 type: 'text',
@@ -126,7 +126,7 @@ io.on('connection', function (socket) {
       if (message.attachment.message === 'Shopp!!' && !state.startedShopping) {
         state.startedShopping = true;
         promiseTimeout(function() {
-          io.emit('message', {
+          socket.emit('message', {
             me: 'bot',
             attachment: {
               type: 'text',
@@ -135,7 +135,7 @@ io.on('connection', function (socket) {
           });
         }, 1500).then(function() {
           promiseTimeout(function() {
-            io.emit('message', {
+            socket.emit('message', {
               me: 'bot',
               attachment: {
                 type: 'quickReply',
@@ -150,7 +150,7 @@ io.on('connection', function (socket) {
       if (message.attachment.message === 'Confirm' && !state.confirmed) {
         state.confirmed = true;
         promiseTimeout(function() {
-          io.emit('message', {
+          socket.emit('message', {
             me: 'bot',
             attachment: {
               type: 'text',
@@ -159,7 +159,7 @@ io.on('connection', function (socket) {
           });
         }, 1500).then(function() {
           promiseTimeout(function() {
-            io.emit('message', {
+            socket.emit('message', {
               me: 'bot',
               attachment: {
                 type: 'text',
@@ -175,7 +175,7 @@ io.on('connection', function (socket) {
       if (message.attachment.message === 'Choose a size.') {
         state.size = message.attachment.response;
         promiseTimeout(function() {
-          io.emit('message', {
+          socket.emit('message', {
             me: 'bot',
             attachment: {
               type: 'text',
@@ -184,7 +184,7 @@ io.on('connection', function (socket) {
           });
         }, 1500).then(function() {
           promiseTimeout(function() {
-            io.emit('message', {
+            socket.emit('message', {
               me: 'bot',
               attachment: {
                 type: 'quickReply',
@@ -199,7 +199,7 @@ io.on('connection', function (socket) {
       if (message.attachment.message === 'How many?') {
         state.number = message.attachment.response;
         promiseTimeout(function() {
-          io.emit('message', {
+          socket.emit('message', {
             me: 'bot',
             attachment: {
               type: 'text',
@@ -208,7 +208,7 @@ io.on('connection', function (socket) {
           });
         }, 1500).then(function() {
           return promiseTimeout(function() {
-            io.emit('message', {
+            socket.emit('message', {
               me: 'bot',
               attachment: {
                 type: 'text',
@@ -218,7 +218,7 @@ io.on('connection', function (socket) {
           }, 1500);
         }).then(function() {
           return promiseTimeout(function() {
-            io.emit('message', {
+            socket.emit('message', {
               me: 'bot',
               attachment: {
                 type: 'receipt',
@@ -233,7 +233,7 @@ io.on('connection', function (socket) {
           }, 2000);
         }).then(function() {
           return promiseTimeout(function() {
-            io.emit('message', {
+            socket.emit('message', {
               me: 'bot',
               attachment: {
                 type: 'button',
@@ -249,7 +249,7 @@ io.on('connection', function (socket) {
       }
     }
 
-    io.emit('message', message);
+    socket.emit('message', message);
   });
 
   socket.on('disconnect', function () {
